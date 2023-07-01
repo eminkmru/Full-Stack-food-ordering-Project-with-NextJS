@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -6,9 +10,9 @@
 
 html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  font-family: "Open Sans", sans-serif;
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+.btn-primary {
+  @apply text-white px-[30px] py-[8px] rounded-3xl bg-primary cursor-pointer hover:opacity-70 transition-all;
+}
