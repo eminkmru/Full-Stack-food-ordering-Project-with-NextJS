@@ -18,6 +18,7 @@ export default function Index() {
         />
       </Head>
       <Header />
+      <Home />
     </div>
   );
 }

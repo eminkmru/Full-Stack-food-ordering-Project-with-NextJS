@@ -1,7 +1,12 @@
 import React from "react";
+import Carousel from "../../../components/Carousel";
 
 const Index = () => {
-  return <div className="font-dancing text-3xl">Feane</div>;
+  return (
+    <div className="relative">
+      <Carousel />
+    </div>
+  );
 };
 
 export default Index;
