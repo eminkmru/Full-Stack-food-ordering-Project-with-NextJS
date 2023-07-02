@@ -4,8 +4,8 @@ import Title from "./ui/Title";
 
 const About = () => {
   return (
-    <div className="bg-secondary py-14 flex items-center">
-      <div className="container flex items-center lg:gap-44 gap-20 md:flex-row flex-col-reverse">
+    <div className="bg-secondary py-14 flex items-center ">
+      <div className="container flex items-center lg:gap-44 gap-20 lg:flex-row flex-col-reverse mx-20 md:mx-36">
         <div>
           <div className="relative md:w-[27.813rem] md:h-[37.5rem] w-[23rem] h-[33rem] ">
             <Image src="/images/about-img.png" alt="" layout="fill" />
