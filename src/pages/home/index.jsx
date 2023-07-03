@@ -4,16 +4,18 @@ import Campaigns from "../../../components/Campaigns";
 import MenuWrapper from "../../../components/product/MenuWrapper";
 import About from "../../../components/About";
 import Reservation from "../../../components/Reservation";
+import Customers from "../../../components/customers/Customers";
 
 const Index = () => {
   return (
-    <div className="">
+    <React.Fragment>
       <Carousel />
       <Campaigns />
       <MenuWrapper />
       <About />
       <Reservation />
-    </div>
+      <Customers />
+    </React.Fragment>
   );
 };
 

@@ -3,6 +3,7 @@ import Title from "./ui/Title";
 import Input from "./form/Input";
 import { useFormik } from "formik";
 import { CircularProgress } from "@mui/material";
+import { reservationScheme } from "../schema/reservationSchema";
 const Reservation = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const onSubmit = async (values, actions) => {
@@ -12,16 +13,18 @@ const Reservation = () => {
     setIsButtonDisabled(false);
   };
 
-  const { values, handleChange, handleSubmit } = useFormik({
-    initialValues: {
-      fullName: "",
-      phoneNumber: "",
-      email: "",
-      persons: "",
-      date: "",
-    },
-    onSubmit,
-  });
+  const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
+    useFormik({
+      initialValues: {
+        fullName: "",
+        phoneNumber: "",
+        email: "",
+        persons: "",
+        date: "",
+      },
+      onSubmit,
+      validationSchema: reservationScheme,
+    });
   const inputs = [
     {
       id: 1,
@@ -29,6 +32,8 @@ const Reservation = () => {
       type: "text",
       placeholder: "Your Full Name",
       value: values.fullName,
+      errorMessage: errors.fullName,
+      touched: touched.fullName,
     },
     {
       id: 2,
@@ -36,6 +41,8 @@ const Reservation = () => {
       type: "number",
       placeholder: "Your Phone Number",
       value: values.phoneNumber,
+      errorMessage: errors.phoneNumber,
+      touched: touched.phoneNumber,
     },
     {
       id: 3,
@@ -43,6 +50,8 @@ const Reservation = () => {
       type: "email",
       placeholder: "Your Email Adress",
       value: values.email,
+      errorMessage: errors.email,
+      touched: touched.email,
     },
     {
       id: 5,
@@ -50,6 +59,8 @@ const Reservation = () => {
       type: "number",
       placeholder: "How Many Persons?",
       value: values.persons,
+      errorMessage: errors.persons,
+      touched: touched.persons,
     },
     {
       id: 4,
@@ -57,6 +68,8 @@ const Reservation = () => {
       type: "datetime-local",
       placeholder: "",
       value: values.date,
+      errorMessage: errors.date,
+      touched: touched.date,
     },
   ];
   return (
@@ -66,7 +79,12 @@ const Reservation = () => {
         <form className="md:flex-1 w-full" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-y-3">
             {inputs.map((input) => (
-              <Input key={input.id} {...input} onChange={handleChange} />
+              <Input
+                key={input.id}
+                {...input}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
             ))}
           </div>
           <button className="btn-primary mt-4" type="submit">
