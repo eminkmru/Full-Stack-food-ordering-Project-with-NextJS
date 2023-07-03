@@ -49,7 +49,7 @@ const Header = () => {
         </nav>
 
         <div className="flex gap-x-4 items-center">
-          <Link href="/login">
+          <Link href="/auth/login">
             <FaUserAlt className="hover:text-primary transition-all" />
           </Link>
           <a href="#">
