@@ -76,7 +76,7 @@ const Reservation = () => {
     <div className="container mx-auto py-12">
       <Title addClass="text-[2.5rem] mb-10">Book A Table</Title>
       <div className="flex justify-between items-center gap-x-10 flex-wrap">
-        <form className="md:flex-1 w-full" onSubmit={handleSubmit}>
+        <form className="md:flex-1 w-full mb-10" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-y-3">
             {inputs.map((input) => (
               <Input
