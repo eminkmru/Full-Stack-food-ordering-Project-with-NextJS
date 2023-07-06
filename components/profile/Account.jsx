@@ -104,7 +104,6 @@ const Account = () => {
           </button>
         </form>
       </div>
-      ;
     </div>
   );
 };
