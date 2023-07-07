@@ -6,6 +6,7 @@ import { CircularProgress } from "@mui/material";
 import { registerSchema } from "../../../schema/register";
 import Link from "next/link";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -17,10 +18,21 @@ const Register = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
         values
       );
+      if (res.status === 200) {
+        toast.success("Register successfully", {
+          position: "bottom-left",
+          theme: "colored",
+        });
+        actions.resetForm();
+      }
     } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "bottom-left",
+        theme: "colored",
+      });
       console.log(error);
     }
-    // actions.resetForm();
+    actions.resetForm();
     setIsButtonDisabled(false);
   };
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
