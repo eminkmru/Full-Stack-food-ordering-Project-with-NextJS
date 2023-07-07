@@ -5,17 +5,33 @@ import { useFormik } from "formik";
 import { CircularProgress } from "@mui/material";
 import { loginSchema } from "../../../schema/login";
 import Link from "next/link";
+import { toast } from "react-toastify";
 import { useSession, signIn } from "next-auth/react";
 
 const Login = () => {
   const { data: session } = useSession();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
   const onSubmit = async (values, actions) => {
     setIsButtonDisabled(true);
-    await new Promise((resolve) => setTimeout(resolve, 4000));
-    actions.resetForm();
+    const { email, password } = values;
+    let options = { redirect: false, email, password };
+    const res = await signIn("credentials", options);
+    if (res.error) {
+      toast.error(res.error, {
+        position: "bottom-left",
+        theme: "colored",
+      });
+    } else {
+      toast.success("Login successfully", {
+        position: "bottom-left",
+        theme: "colored",
+      });
+    }
+    /*   actions.resetForm(); */
     setIsButtonDisabled(false);
   };
+
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
     useFormik({
       initialValues: {
@@ -25,6 +41,7 @@ const Login = () => {
       onSubmit,
       validationSchema: loginSchema,
     });
+
   const inputs = [
     {
       id: 1,
@@ -45,6 +62,9 @@ const Login = () => {
       touched: touched.password,
     },
   ];
+
+  console.log(session);
+
   return (
     <div className="container mx-auto">
       <form
