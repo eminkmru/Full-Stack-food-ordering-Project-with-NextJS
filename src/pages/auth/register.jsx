@@ -5,13 +5,22 @@ import { useFormik } from "formik";
 import { CircularProgress } from "@mui/material";
 import { registerSchema } from "../../../schema/register";
 import Link from "next/link";
+import axios from "axios";
 
 const Register = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const onSubmit = async (values, actions) => {
     setIsButtonDisabled(true);
-    await new Promise((resolve) => setTimeout(resolve, 4000));
-    actions.resetForm();
+
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
+        values
+      );
+    } catch (error) {
+      console.log(error);
+    }
+    // actions.resetForm();
     setIsButtonDisabled(false);
   };
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
