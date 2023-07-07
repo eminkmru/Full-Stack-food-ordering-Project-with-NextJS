@@ -7,11 +7,13 @@ import OutsideClickHandler from "react-outside-click-handler";
 import { GiCancel } from "react-icons/gi";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
   const [isSearchModal, setIsSearchModal] = useState(false);
   const [isMenuModal, setIsMenuModal] = useState(false);
   const router = useRouter();
+  const cart = useSelector((state) => state.cart);
 
   return (
     <div
@@ -55,8 +57,11 @@ const Header = () => {
             </span>
           </Link>
           <Link href="/cart">
-            <span>
+            <span className="relative">
               <FaShoppingCart className="hover:text-primary transition-all" />
+              <span className="w-4 h-4 text-xs grid place-content-center rounded-full bg-primary absolute -top-2 -right-3 text-black font-bold">
+                {cart.products.length === 0 ? "0" : cart.products.length}
+              </span>
             </span>
           </Link>
           <button onClick={() => setIsSearchModal(true)}>

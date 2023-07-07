@@ -2,6 +2,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import Title from "../../../components/ui/Title";
 import Header from "../../../components/layout/Header";
+import { addProduct } from "../../../redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const extraItems = [
   {
@@ -20,6 +22,21 @@ const extraItems = [
     price: 15,
   },
 ];
+const foodItems = [
+  {
+    id: 1,
+    name: "Pizza 1",
+    price: 10,
+    desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur itaque harum odio, placeat consequatur non. Lorem ipsum dolor sit amet.",
+    extraOptions: [
+      {
+        id: 1,
+        name: "Extra 1",
+        price: 1,
+      },
+    ],
+  },
+];
 
 const Index = () => {
   const [prices, setPrices] = useState([10, 20, 30]);
@@ -27,19 +44,19 @@ const Index = () => {
   const [size, setSize] = useState(0);
   const [optionItems, setOptionItems] = useState(extraItems);
   const [extras, setExtras] = useState([]);
+  const cart = useSelector((state) => state.cart);
+
+  const dispatch = useDispatch();
 
   const handleSize = (sizeIndex) => {
-    debugger;
     const difference = prices[sizeIndex] - prices[size];
     setSize(sizeIndex);
     changePrice(difference);
   };
   const changePrice = (number) => {
-    debugger;
     setPrice(price + number);
   };
   const handleChange = (e, item) => {
-    debugger;
     const checked = e.target.checked;
     if (checked) {
       changePrice(item.price);
@@ -49,7 +66,10 @@ const Index = () => {
       setExtras(extras.filter((extra) => extra.id !== item.id));
     }
   };
-
+  const handleClick = () => {
+    dispatch(addProduct({ ...foodItems[0], extras, price, quantity: 1 }));
+  };
+  console.log(cart);
   return (
     <>
       <div className="flex items-center md:h-[calc(100vh_-_88px)] gap-5 py-10 flex-wrap md:justify-between justify-center">
@@ -115,7 +135,9 @@ const Index = () => {
               </label>
             ))}
           </div>
-          <button className="btn-primary mt-6">Add to Cart</button>
+          <button className="btn-primary mt-6" onClick={handleClick}>
+            Add to Cart
+          </button>
         </div>
       </div>
     </>
