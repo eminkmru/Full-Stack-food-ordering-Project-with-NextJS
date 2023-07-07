@@ -5,8 +5,10 @@ import { useFormik } from "formik";
 import { CircularProgress } from "@mui/material";
 import { loginSchema } from "../../../schema/login";
 import Link from "next/link";
+import { useSession, signIn } from "next-auth/react";
 
 const Login = () => {
+  const { data: session } = useSession();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const onSubmit = async (values, actions) => {
     setIsButtonDisabled(true);
@@ -64,7 +66,11 @@ const Login = () => {
           <button className="btn-primary" type="submit">
             {isButtonDisabled ? <CircularProgress size={15} /> : "Login"}
           </button>
-          <button className="btn-primary !bg-secondary">
+          <button
+            className="btn-primary !bg-secondary"
+            type="button"
+            onClick={() => signIn("github")}
+          >
             <i className="fa-brands fa-github mr-2"></i> GITHUB
           </button>
           <Link href="/auth/register">
