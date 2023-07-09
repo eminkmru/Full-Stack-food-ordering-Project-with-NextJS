@@ -7,8 +7,10 @@ import { registerSchema } from "../../../schema/register";
 import Link from "next/link";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const Register = () => {
+  const { push } = useRouter();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const onSubmit = async (values, actions) => {
     setIsButtonDisabled(true);
@@ -24,6 +26,7 @@ const Register = () => {
           theme: "colored",
         });
         actions.resetForm();
+        push("/auth/login");
       }
     } catch (error) {
       toast.error(error.response.data.message, {

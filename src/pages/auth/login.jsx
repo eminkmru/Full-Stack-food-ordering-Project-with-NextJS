@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Title from "../../../components/ui/Title";
 import Input from "../../../components/form/Input";
 import { useFormik } from "formik";
@@ -7,10 +7,12 @@ import { loginSchema } from "../../../schema/login";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Login = () => {
   const { data: session } = useSession();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const { push } = useRouter();
 
   const onSubmit = async (values, actions) => {
     setIsButtonDisabled(true);
@@ -28,9 +30,14 @@ const Login = () => {
         theme: "colored",
       });
     }
-    /*   actions.resetForm(); */
+    actions.resetForm();
     setIsButtonDisabled(false);
   };
+  useEffect(() => {
+    if (session) {
+      push("/profile");
+    }
+  }, [session, push]);
 
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
     useFormik({
@@ -90,6 +97,7 @@ const Login = () => {
             className="btn-primary !bg-secondary"
             type="button"
             onClick={() => signIn("github")}
+            disabled={isButtonDisabled}
           >
             <i className="fa-brands fa-github mr-2"></i> GITHUB
           </button>

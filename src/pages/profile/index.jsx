@@ -1,9 +1,28 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Password from "../../../components/profile/Password";
 import Order from "../../../components/profile/Order";
+import Account from "../../../components/profile/Account";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 const Profile = () => {
+  const { data: sessiom } = useSession();
   const [tabs, setTabs] = useState(0);
+
+  const { push } = useRouter();
+
+  const handleSignOut = () => {
+    if (confirm("Are you sure to sign out?")) {
+      signOut({ redirect: false });
+      push("/auth/login");
+    }
+  };
+
+  useEffect(() => {
+    if (!sessiom) {
+      push("/auth/login");
+    }
+  }, [sessiom, push]);
 
   return (
     <div className="flex px-10 mb-36 md:flex-row flex-col">
@@ -59,12 +78,9 @@ const Profile = () => {
               </button>
             </li>
             <li
-              className={`cursor-pointer hover:bg-secondary hover:text-white transition-all ${
-                tabs === 3 && "bg-primary text-white"
+              className={`cursor-pointer hover:bg-secondary hover:text-white transition-all 
               }`}
-              onClick={() => {
-                setTabs(3);
-              }}
+              onClick={handleSignOut}
             >
               <button className="border w-full p-3">
                 <i className="fa fa-sign-out mr-1"></i>Exit
