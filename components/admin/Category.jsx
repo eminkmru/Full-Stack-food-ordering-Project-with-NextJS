@@ -1,45 +1,40 @@
-import React, { useState } from "react";
-import Title from "../ui/Title";
+import { useState } from "react";
 import Input from "../form/Input";
+import Title from "../ui/Title";
 
 const Category = () => {
   const [inputText, setInputText] = useState("");
-  const [category, setCategory] = useState(["Pizza", "Burger", "Pasta"]);
+  const [categories, setCategories] = useState(["pizza"]);
+
   return (
-    <div className="w-full ml-6">
-      <Title addClass="text-[2.5rem] my-5">Category</Title>
-      <div>
-        <div className="flex gap-4 flex-1 flex-col sm:flex-row items-start sm:items-center ">
+    <div className="lg:p-8 flex-1 lg:mt-0 mt-5">
+      <Title addClass="text-[40px]">Category</Title>
+      <div className="mt-5">
+        <div className="flex gap-4 flex-1 items-center">
           <Input
-            placeholder="Add a New Category"
+            placeholder="Add a new Category..."
             onChange={(e) => setInputText(e.target.value)}
             value={inputText}
           />
           <button
             className="btn-primary"
             onClick={() => {
-              setCategory([...category, inputText]);
+              setCategories([...categories, inputText]);
               setInputText("");
             }}
           >
             Add
           </button>
         </div>
-        <Title addClass="text-[2.5rem] my-5">Category List</Title>
-        <div className="mt-10 flex flex-col gap-5 ">
-          {category.map((item, index) => (
-            <div
-              className="flex justify-between border-2 border-r-4 border-b-8 items-center py-3 px-2"
-              key={index}
-            >
-              <b className="text-xl"> {item} </b>
+        <div className="mt-10">
+          {categories.map((category, index) => (
+            <div className="flex justify-between mt-4" key={index}>
+              <b className="text-xl">{category}</b>
               <button
                 className="btn-primary !bg-danger"
-                onClick={() => {
-                  setCategory(
-                    category.filter((item) => item !== category[index])
-                  );
-                }}
+                onClick={() =>
+                  setCategories(categories.filter((cat) => cat !== category))
+                }
               >
                 Delete
               </button>

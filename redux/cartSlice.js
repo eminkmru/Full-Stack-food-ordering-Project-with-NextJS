@@ -9,17 +9,17 @@ const cartSlice = createSlice({
   },
   reducers: {
     addProduct: (state, action) => {
-      state.products.push(action.payload); // add the product to the array
-      state.quantity += 1; // increment the quantity
-      state.total += action.payload.price; // add the price to the total
+      state.products.push(action.payload);
+      state.quantity += action.payload.quantity;
+      state.total += action.payload.price;
     },
     reset: (state, action) => {
       state.products = [];
-      state.quantity = 0; // increment the quantity
-      state.total = 0; // add the price to the total
+      state.quantity = 0;
+      state.total = 0;
     },
   },
 });
 
-export const { addProduct, reset } = cartSlice.actions; // export the action
-export default cartSlice.reducer; // export the reducer
+export const { addProduct, reset } = cartSlice.actions;
+export default cartSlice.reducer;

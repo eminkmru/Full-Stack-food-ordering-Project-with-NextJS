@@ -1,41 +1,34 @@
 import React, { useState } from "react";
-import Title from "../ui/Title";
-import Input from "../form/Input";
+import Input from "../../components/form/Input";
+import Title from "../../components/ui/Title";
 import { useFormik } from "formik";
-import { adminFooterSchema } from "../../schema/adminFooter";
+import { footerSchema } from "../../schema/footer";
 
 const Footer = () => {
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [linkAddress, setLinkAddress] = useState("");
-  const [icanName, setIcanName] = useState("");
+  const [iconName, setIconName] = useState("");
   const [icons, setIcons] = useState([
-    "fab fa-facebook",
-    "fab fa-twitter",
-    "fab fa-instagram",
-    "fab fa-linkedin",
+    "fa fa-facebook",
+    "fa fa-twitter",
+    "fa fa-instagram",
   ]);
-
   const onSubmit = async (values, actions) => {
-    setIsButtonDisabled(true);
     await new Promise((resolve) => setTimeout(resolve, 4000));
     actions.resetForm();
-    setIsButtonDisabled(false);
   };
 
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
+  const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
       initialValues: {
         location: "",
         email: "",
         phoneNumber: "",
-        description: "",
+        desc: "",
         day: "",
         time: "",
-        link: "",
-        icon: "",
       },
       onSubmit,
-      validationSchema: adminFooterSchema,
+      validationSchema: footerSchema,
     });
   const inputs = [
     {
@@ -50,7 +43,7 @@ const Footer = () => {
     {
       id: 2,
       name: "email",
-      type: "email",
+      type: "text",
       placeholder: "Your Email",
       value: values.email,
       errorMessage: errors.email,
@@ -67,18 +60,18 @@ const Footer = () => {
     },
     {
       id: 4,
-      name: "description",
+      name: "desc",
       type: "text",
-      placeholder: "Write a Description",
-      value: values.description,
-      errorMessage: errors.description,
-      touched: touched.description,
+      placeholder: "Your Description",
+      value: values.desc,
+      errorMessage: errors.desc,
+      touched: touched.desc,
     },
     {
       id: 5,
       name: "day",
       type: "text",
-      placeholder: "Write a Day",
+      placeholder: "Update Day",
       value: values.day,
       errorMessage: errors.day,
       touched: touched.day,
@@ -87,78 +80,64 @@ const Footer = () => {
       id: 6,
       name: "time",
       type: "text",
-      placeholder: "Write a Time",
+      placeholder: "Update Time",
       value: values.time,
       errorMessage: errors.time,
       touched: touched.time,
     },
-    {
-      id: 7,
-      name: "link",
-      type: "url",
-      placeholder: "Write a Link",
-      value: values.link,
-      errorMessage: errors.link,
-      touched: touched.link,
-    },
-    {
-      id: 8,
-      name: "icon",
-      type: "text",
-      placeholder: "Icon Name",
-      value: values.icon,
-      errorMessage: errors.icon,
-      touched: touched.icon,
-    },
   ];
-  const firstDivInputs = inputs.slice(0, 6);
   return (
-    <div className="sm:m-5 w-full ">
-      <Title addClass="text-[2.5rem] my-5">Footer</Title>
-      <div className="">
-        <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
-          {firstDivInputs.map((input) => (
-            <Input {...input} />
-          ))}
-        </div>
-        <div className="my-4 flex  flex-col items-center  lg:flex-row justify-between">
-          <div className="flex flex-col sm:flex-row gap-5 ">
-            <Input
-              placeholder="Link Address"
-              onChange={(e) => setLinkAddress(e.target.value)}
-            />
-            <Input
-              placeholder="Icon Name"
-              onChange={(e) => setIcanName(e.target.value)}
-            />
-            <button
-              className="btn-primary"
-              onClick={() => setIcons([...icons, icanName])}
-              type="button"
-            >
-              Add
-            </button>
-          </div>
-          <div className="flex gap-4 mt-5  ml-3">
-            {icons.map((icon, index) => (
-              <span className="flex gap-4" key={index}>
-                <i className={` ${icon} text-xl`}></i>
-                <button
-                  onClick={() => {
-                    setIcons((prev) => prev.filter((item, i) => i !== index));
-                  }}
-                >
-                  <i className="fa-solid fa-trash text-danger"></i>
-                </button>
-              </span>
-            ))}
-          </div>
-        </div>
-        <div>
-          <button className="btn-primary mt-14 w-full sm:w-auto">Update</button>
-        </div>
+    <form className="lg:p-8 flex-1 lg:mt-0 mt-5">
+      <Title addClass="text-[40px]">Footer Settings</Title>
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 mt-4">
+        {inputs.map((input) => (
+          <Input
+            key={input.id}
+            {...input}
+            onBlur={handleBlur}
+            onChange={handleChange}
+          />
+        ))}
       </div>
-    </div>
+      <div className="mt-4 flex justify-between md:items-center md:flex-row flex-col gap-4">
+        <div className="flex items-center gap-4">
+          <Input placeholder="Link Address" value="https://" onChange="" />
+          <Input
+            placeholder="Icon Name"
+            defaulValue="fa fa-"
+            onChange={(e) => setIconName(e.target.value)}
+            value={iconName}
+          />
+          <button
+            className="btn-primary"
+            type="button"
+            onClick={() => {
+              setIcons([...icons, iconName]);
+              setIconName("fa fa-");
+            }}
+          >
+            Add
+          </button>
+        </div>
+        <ul className="flex items-center gap-6">
+          {icons.map((icon, index) => (
+            <li key={index} className="flex items-center">
+              <i className={`${icon} text-2xl`}></i>
+              <button
+                className="text-danger"
+                onClick={() => {
+                  setIcons((prev) => prev.filter((item, i) => i !== index));
+                }}
+                type="button"
+              >
+                <i className="fa fa-trash text-xl ml-2"></i>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <button className="btn-primary mt-4">Update</button>
+    </form>
   );
 };
 

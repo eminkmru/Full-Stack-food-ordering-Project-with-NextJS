@@ -1,40 +1,45 @@
-import React, { useEffect, useState } from "react";
-import Title from "../../../components/ui/Title";
-import Input from "../../../components/form/Input";
 import { useFormik } from "formik";
-import { CircularProgress } from "@mui/material";
-import { loginSchema } from "../../../schema/login";
 import Link from "next/link";
-import { toast } from "react-toastify";
-import { useSession, signIn, getSession } from "next-auth/react";
+import Input from "../../../components/form/Input";
+import Title from "../../../components/ui/Title";
+import { loginSchema } from "../../../schema/login";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const Login = () => {
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const { data: session } = useSession();
   const { push } = useRouter();
+  const [currentUser, setCurrentUser] = useState();
 
   const onSubmit = async (values, actions) => {
-    setIsButtonDisabled(true);
     const { email, password } = values;
     let options = { redirect: false, email, password };
-    const res = await signIn("credentials", options);
-    if (res.error) {
-      toast.error(res.error, {
-        position: "bottom-left",
-        theme: "colored",
-      });
-    } else {
-      toast.success("Login successfully", {
-        position: "bottom-left",
-        theme: "colored",
-      });
-      push("/profile");
+    try {
+      const res = await signIn("credentials", options);
+      actions.resetForm();
+    } catch (err) {
+      console.log(err);
     }
-    actions.resetForm();
-    setIsButtonDisabled(false);
   };
 
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+        setCurrentUser(
+          res.data?.find((user) => user.email === session?.user?.email)
+        );
+        push("/profile/" + currentUser?._id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUser();
+  }, [session, push, currentUser]);
+
+  const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
       initialValues: {
         email: "",
@@ -49,7 +54,7 @@ const Login = () => {
       id: 1,
       name: "email",
       type: "email",
-      placeholder: "Your Email Adress",
+      placeholder: "Your Email Address",
       value: values.email,
       errorMessage: errors.email,
       touched: touched.email,
@@ -68,11 +73,11 @@ const Login = () => {
   return (
     <div className="container mx-auto">
       <form
-        className="flex flex-col items-center my-20 w-1/2 mx-auto"
+        className="flex flex-col items-center my-20 md:w-1/2 w-full mx-auto"
         onSubmit={handleSubmit}
       >
-        <Title addClass="text-[3rem] text-center mb-6 font-bold ">Login</Title>
-        <div className="flex flex-col w-full gap-y-3 mt-14">
+        <Title addClass="text-[40px] mb-6">Login</Title>
+        <div className="flex flex-col gap-y-3 w-full">
           {inputs.map((input) => (
             <Input
               key={input.id}
@@ -82,20 +87,20 @@ const Login = () => {
             />
           ))}
         </div>
-        <div className="flex flex-col w-full gap-y-4 mt-12">
+        <div className="flex flex-col w-full gap-y-3 mt-6">
           <button className="btn-primary" type="submit">
-            {isButtonDisabled ? <CircularProgress size={15} /> : "Login"}
+            LOGIN
           </button>
           <button
             className="btn-primary !bg-secondary"
             type="button"
             onClick={() => signIn("github")}
-            disabled={isButtonDisabled}
           >
-            <i className="fa-brands fa-github mr-2"></i> GITHUB
+            <i className="fa fa-github mr-2 text-lg"></i>
+            GITHUB
           </button>
           <Link href="/auth/register">
-            <span className="text-sm underline cursor-pointer text-gray-600">
+            <span className="text-sm underline cursor-pointer text-secondary">
               Do you no have a account?
             </span>
           </Link>
@@ -104,16 +109,21 @@ const Login = () => {
     </div>
   );
 };
+
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
-  if (session) {
+
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+  const user = res.data?.find((user) => user.email === session?.user.email);
+  if (session && user) {
     return {
       redirect: {
-        destination: "/profile",
+        destination: "/profile/" + user._id,
         permanent: false,
       },
     };
   }
+
   return {
     props: {},
   };

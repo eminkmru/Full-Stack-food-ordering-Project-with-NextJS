@@ -1,19 +1,18 @@
-import React, { useState } from "react";
-import Title from "./ui/Title";
+import React from "react";
 import Input from "./form/Input";
+import Title from "./ui/Title";
 import { useFormik } from "formik";
-import { CircularProgress } from "@mui/material";
-import { reservationScheme } from "../schema/reservationSchema";
+import { reservationSchema } from "../schema/reservation";
+{
+}
+
 const Reservation = () => {
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const onSubmit = async (values, actions) => {
-    setIsButtonDisabled(true);
     await new Promise((resolve) => setTimeout(resolve, 4000));
     actions.resetForm();
-    setIsButtonDisabled(false);
   };
 
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
+  const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
       initialValues: {
         fullName: "",
@@ -23,8 +22,9 @@ const Reservation = () => {
         date: "",
       },
       onSubmit,
-      validationSchema: reservationScheme,
+      validationSchema: reservationSchema,
     });
+
   const inputs = [
     {
       id: 1,
@@ -48,13 +48,13 @@ const Reservation = () => {
       id: 3,
       name: "email",
       type: "email",
-      placeholder: "Your Email Adress",
+      placeholder: "Your Email Address",
       value: values.email,
       errorMessage: errors.email,
       touched: touched.email,
     },
     {
-      id: 5,
+      id: 4,
       name: "persons",
       type: "number",
       placeholder: "How Many Persons?",
@@ -63,20 +63,20 @@ const Reservation = () => {
       touched: touched.persons,
     },
     {
-      id: 4,
+      id: 5,
       name: "date",
       type: "datetime-local",
-      placeholder: "",
       value: values.date,
       errorMessage: errors.date,
       touched: touched.date,
     },
   ];
+
   return (
     <div className="container mx-auto py-12">
-      <Title addClass="text-[2.5rem] mb-10">Book A Table</Title>
-      <div className="flex justify-between items-center gap-x-10 flex-wrap">
-        <form className="md:flex-1 w-full mb-10" onSubmit={handleSubmit}>
+      <Title addClass="text-[40px] mb-10">Book A Table</Title>
+      <div className="flex justify-between flex-wrap-reverse gap-10">
+        <form className="lg:flex-1 w-full" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-y-3">
             {inputs.map((input) => (
               <Input
@@ -88,17 +88,16 @@ const Reservation = () => {
             ))}
           </div>
           <button className="btn-primary mt-4" type="submit">
-            {isButtonDisabled ? <CircularProgress size={15} /> : "Book Now"}
+            BOOK NOW
           </button>
         </form>
-        <div className="md:flex-1 w-full">
+        <div className="lg:flex-1 w-full">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15647.252594303785!2d34.53820105369025!3d36.77569621331589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15278be06f562813%3A0x66440c856df61d13!2sOTTOBros%20Burger%20%26%20More%20%C3%87iflikk%C3%B6y!5e0!3m2!1str!2str!4v1688299576134!5m2!1str!2str"
-            width="100%"
-            height="450"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d48348.66924008447!2d-74.24927437205034!3d40.766603131286395!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c254b5958982c3%3A0xb6ab3931055a2612!2sEast%20Orange%2C%20New%20Jersey%2C%20Amerika%20Birle%C5%9Fik%20Devletleri!5e0!3m2!1str!2str!4v1661853137161!5m2!1str!2str"
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
+            className="h-full w-full"
           ></iframe>
         </div>
       </div>

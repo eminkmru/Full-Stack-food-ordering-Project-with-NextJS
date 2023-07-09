@@ -1,38 +1,43 @@
-import React, { useState } from "react";
-import Title from "../ui/Title";
-import Input from "../form/Input";
-import { CircularProgress } from "@mui/material";
+import React from "react";
+import Input from "../../components/form/Input";
+import Title from "../../components/ui/Title";
 import { useFormik } from "formik";
-import { profileScheme } from "../../schema/profile";
+import { profileSchema } from "../../schema/profile";
+import axios from "axios";
 
-const Account = () => {
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+const Account = ({ user }) => {
   const onSubmit = async (values, actions) => {
-    setIsButtonDisabled(true);
-    await new Promise((resolve) => setTimeout(resolve, 4000));
+    try {
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`,
+        values
+      );
+    } catch (err) {
+      console.log(err);
+    }
     actions.resetForm();
-    setIsButtonDisabled(false);
   };
 
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
+  const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
+      enableReinitialize: true,
       initialValues: {
-        fullName: "",
-        phoneNumber: "",
-        email: "",
-        address: "",
-        job: "",
-        bio: "",
+        fullName: user?.fullName,
+        phoneNumber: user?.phoneNumber,
+        email: user?.email,
+        address: user?.address,
+        job: user?.job,
+        bio: user?.bio,
       },
       onSubmit,
-      validationSchema: profileScheme,
+      validationSchema: profileSchema,
     });
   const inputs = [
     {
       id: 1,
       name: "fullName",
       type: "text",
-      placeholder: "*Your Full Name",
+      placeholder: "Your Full Name",
       value: values.fullName,
       errorMessage: errors.fullName,
       touched: touched.fullName,
@@ -41,7 +46,7 @@ const Account = () => {
       id: 2,
       name: "phoneNumber",
       type: "number",
-      placeholder: "*Your Phone Number",
+      placeholder: "Your Phone Number",
       value: values.phoneNumber,
       errorMessage: errors.phoneNumber,
       touched: touched.phoneNumber,
@@ -50,22 +55,22 @@ const Account = () => {
       id: 3,
       name: "email",
       type: "email",
-      placeholder: "*Your Email Adress",
+      placeholder: "Your Email Address",
       value: values.email,
       errorMessage: errors.email,
       touched: touched.email,
     },
     {
-      id: 5,
+      id: 4,
       name: "address",
       type: "text",
-      placeholder: "*Your Address",
+      placeholder: "Your Address",
       value: values.address,
       errorMessage: errors.address,
       touched: touched.address,
     },
     {
-      id: 4,
+      id: 5,
       name: "job",
       type: "text",
       placeholder: "Your Job",
@@ -77,34 +82,29 @@ const Account = () => {
       id: 6,
       name: "bio",
       type: "text",
-      placeholder: "*Your Bio",
+      placeholder: "Your Bio",
       value: values.bio,
       errorMessage: errors.bio,
       touched: touched.bio,
     },
   ];
   return (
-    <div>
-      <div className="p-8 flex-1">
-        <Title addClass="text-[2.5rem]">Account Settings</Title>
-        <form
-          onSubmit={handleSubmit}
-          className="grid lg:grid-cols-2 gap-4 mt-5"
-        >
-          {inputs.map((input) => (
-            <Input
-              key={input.id}
-              {...input}
-              onBlur={handleBlur}
-              onChange={handleChange}
-            />
-          ))}
-          <button className="btn-primary w-full text-center" type="submit">
-            {isButtonDisabled ? <CircularProgress size={20} /> : "Update"}
-          </button>
-        </form>
+    <form className="lg:p-8 flex-1 lg:mt-0 mt-5" onSubmit={handleSubmit}>
+      <Title addClass="text-[40px]">Account Settings</Title>
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 mt-4">
+        {inputs.map((input) => (
+          <Input
+            key={input.id}
+            {...input}
+            onBlur={handleBlur}
+            onChange={handleChange}
+          />
+        ))}
       </div>
-    </div>
+      <button className="btn-primary mt-4" type="submit">
+        Update
+      </button>
+    </form>
   );
 };
 

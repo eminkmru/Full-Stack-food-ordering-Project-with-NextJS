@@ -4,18 +4,23 @@ import MenuItem from "./MenuItem";
 
 const MenuWrapper = () => {
   return (
-    <div className="container mx-auto mb-16 ">
+    <div className="container mx-auto  mb-16">
       <div className="flex flex-col items-center w-full">
-        <Title addClass="text-[2.5rem]">Our Menu</Title>
+        <Title addClass="text-[40px]">Our Menu</Title>
         <div className="mt-10">
-          <button className="btn-secondary active">All</button>
-          <button className="btn-secondary ">Burger</button>
-          <button className="btn-secondary ">Pizza</button>
-          <button className="btn-secondary ">Drink</button>
+          <button className="px-6 py-2 bg-secondary rounded-3xl text-white">
+            All
+          </button>
+          <button className="px-6 py-2 rounded-3xl ">Burger</button>
+          <button className="px-6 py-2  rounded-3xl ">Pizza</button>
+          <button className="px-6 py-2  rounded-3xl ">Drink</button>
         </div>
       </div>
-
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="mt-8 grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
+        <MenuItem />
+        <MenuItem />
+        <MenuItem />
+        <MenuItem />
         <MenuItem />
         <MenuItem />
         <MenuItem />
