@@ -5,13 +5,35 @@ import { useFormik } from "formik";
 import { CircularProgress } from "@mui/material";
 import { adminSchema } from "../../../schema/admin";
 import Link from "next/link";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const Index = () => {
+  const { push } = useRouter();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const onSubmit = async (values, actions) => {
     setIsButtonDisabled(true);
-    await new Promise((resolve) => setTimeout(resolve, 4000));
-    actions.resetForm();
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin`,
+        values
+      );
+      if (res.status === 200) {
+        actions.resetForm();
+        toast.success("Login Success", {
+          position: "bottom-left",
+          theme: "colored",
+        });
+        push("/admin/profile");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message, {
+        position: "bottom-left",
+        theme: "colored",
+      });
+    }
     setIsButtonDisabled(false);
   };
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
@@ -76,6 +98,21 @@ const Index = () => {
       </form>
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  const myCookie = ctx.req?.cookies || "";
+  if (myCookie.token === process.env.ADMIN_TOKEN) {
+    return {
+      redirect: {
+        destination: "/admin/profile",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default Index;
