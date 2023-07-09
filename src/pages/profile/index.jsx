@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import Password from "../../../components/profile/Password";
 import Order from "../../../components/profile/Order";
 import Account from "../../../components/profile/Account";
-import { signOut, useSession } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+
 const Profile = () => {
-  const { data: sessiom } = useSession();
   const [tabs, setTabs] = useState(0);
 
   const { push } = useRouter();
@@ -17,13 +17,7 @@ const Profile = () => {
       push("/auth/login");
     }
   };
-
-  useEffect(() => {
-    if (!sessiom) {
-      push("/auth/login");
-    }
-  }, [sessiom, push]);
-
+  // if not redict to login page use useEffect
   return (
     <div className="flex px-10 mb-36 md:flex-row flex-col">
       <div className="border border-gray-600 lg:w-80 w-auto flex flex-col justify-center flex-shrink-0">
@@ -95,5 +89,19 @@ const Profile = () => {
     </div>
   );
 };
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  };
+}
 
 export default Profile;

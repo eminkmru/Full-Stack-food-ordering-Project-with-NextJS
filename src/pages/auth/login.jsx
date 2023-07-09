@@ -6,11 +6,10 @@ import { CircularProgress } from "@mui/material";
 import { loginSchema } from "../../../schema/login";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 const Login = () => {
-  const { data: session } = useSession();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { push } = useRouter();
 
@@ -29,15 +28,11 @@ const Login = () => {
         position: "bottom-left",
         theme: "colored",
       });
+      push("/profile");
     }
     actions.resetForm();
     setIsButtonDisabled(false);
   };
-  useEffect(() => {
-    if (session) {
-      push("/profile");
-    }
-  }, [session, push]);
 
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
     useFormik({
@@ -69,8 +64,6 @@ const Login = () => {
       touched: touched.password,
     },
   ];
-
-  console.log(session);
 
   return (
     <div className="container mx-auto">
@@ -111,5 +104,19 @@ const Login = () => {
     </div>
   );
 };
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+  if (session) {
+    return {
+      redirect: {
+        destination: "/profile",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
 
 export default Login;
