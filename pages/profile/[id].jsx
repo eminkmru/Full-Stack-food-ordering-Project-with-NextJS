@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Account from "../../components/profile/Account";
 import Order from "../../components/profile/Order";
 import Password from "../../components/profile/Password";
+import { toast } from "react-toastify";
 
 const Profile = ({ user }) => {
   const { data: session } = useSession();
@@ -17,6 +18,10 @@ const Profile = ({ user }) => {
     if (confirm("Are you sure you want to sign out?")) {
       signOut({ redirect: false });
       push("/auth/login");
+      toast.success("Sign out successfully", {
+        position: "bottom-left",
+        theme: "colored",
+      });
     }
   };
 
@@ -25,7 +30,7 @@ const Profile = ({ user }) => {
       push("/auth/login");
     }
   }, [session, push]);
-
+  console.log(user);
   return (
     <div className="flex px-10 min-h-[calc(100vh_-_433px)] lg:flex-row flex-col lg:mb-0 mb-10">
       <div className="lg:w-80 w-100 flex-shrink-0">

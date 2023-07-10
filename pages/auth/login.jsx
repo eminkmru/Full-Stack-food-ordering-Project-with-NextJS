@@ -7,6 +7,7 @@ import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { data: session } = useSession();
@@ -19,6 +20,10 @@ const Login = () => {
     try {
       const res = await signIn("credentials", options);
       actions.resetForm();
+      toast.success("Login successfully", {
+        position: "bottom-left",
+        theme: "colored",
+      });
     } catch (err) {
       console.log(err);
     }
@@ -31,7 +36,7 @@ const Login = () => {
         setCurrentUser(
           res.data?.find((user) => user.email === session?.user?.email)
         );
-        push("/profile/" + currentUser?._id);
+        session && push("/profile/" + currentUser?._id);
       } catch (err) {
         console.log(err);
       }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Input from "../form/Input";
 import Title from "../ui/Title";
+import { toast } from "react-toastify";
 
 const Category = () => {
   const [inputText, setInputText] = useState("");
@@ -28,13 +29,20 @@ const Category = () => {
         </div>
         <div className="mt-10">
           {categories.map((category, index) => (
-            <div className="flex justify-between mt-4" key={index}>
+            <div
+              className="flex justify-between mt-4 border p-3 items-center border-r-4 border-b-8 border-primary rounded-lg hover:border-secondary transition-all"
+              key={index}
+            >
               <b className="text-xl">{category}</b>
               <button
                 className="btn-primary !bg-danger"
-                onClick={() =>
-                  setCategories(categories.filter((cat) => cat !== category))
-                }
+                onClick={() => {
+                  setCategories(categories.filter((cat) => cat !== category));
+                  toast.warning("Category Deleted", {
+                    position: "bottom-left",
+                    theme: "colored",
+                  });
+                }}
               >
                 Delete
               </button>
