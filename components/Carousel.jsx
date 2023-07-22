@@ -30,6 +30,7 @@ const Carousel = () => {
             src="/images/hero-bg.jpg"
             alt=""
             layout="fill"
+            priority
             objectFit="cover"
           />
         </div>
