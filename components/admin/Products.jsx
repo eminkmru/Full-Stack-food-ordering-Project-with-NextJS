@@ -1,9 +1,12 @@
+import { useState } from "react";
 import Title from "../ui/Title";
 import Image from "next/image";
+import AddProduct from "./AddProduct";
 
 const Products = () => {
+  const [isProductModal, setIsProductModal] = useState(false);
   return (
-    <div className="lg:p-8 flex-1 lg:mt-0 mt-5">
+    <div className="lg:p-8 flex-1 lg:mt-0 mt-5 relative min-h-[400px]  lg:max-w-[70%] xl:max-w-none">
       <Title addClass="text-[40px]">Products</Title>
       <div className="overflow-x-auto w-full mt-5">
         <table className="w-full text-sm text-center text-gray-500 min-w-[1000px]">
@@ -47,6 +50,13 @@ const Products = () => {
           </tbody>
         </table>
       </div>
+      {isProductModal && <AddProduct setIsProductModal={setIsProductModal} />}
+      <button
+        className="btn-primary w-12 h-12 !p-0  bottom-14 right-14 text-4xl text-center absolute"
+        onClick={() => setIsProductModal(true)}
+      >
+        +
+      </button>
     </div>
   );
 };

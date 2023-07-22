@@ -8,6 +8,7 @@ import Footer from "../../components/admin/Footer";
 import Order from "../../components/admin/Order";
 import Products from "../../components/admin/Products";
 import { toast } from "react-toastify";
+import AddProduct from "../../components/admin/AddProduct";
 
 const Profile = () => {
   const [tabs, setTabs] = useState(0);
