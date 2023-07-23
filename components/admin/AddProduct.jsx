@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import Title from "../ui/Title";
 import { GiCancel } from "react-icons/gi";
+import axios from "axios";
 
 const AddProduct = ({ setIsProductModal }) => {
   const [file, setFile] = useState();
@@ -14,8 +15,23 @@ const AddProduct = ({ setIsProductModal }) => {
       setFile(changeEvent.target.files[0]);
     };
     reader.readAsDataURL(changeEvent.target.files[0]);
-    console.log(imageSrc);
   };
+
+  const handleCreate = async () => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "food-ordering");
+
+    try {
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/dp5whpvw0/image/upload",
+        formData
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="fixed top-0 left-0 w-screen h-screen z-50 after:content-[''] after:w-screen after:h-screen after:bg-white after:absolute after:top-0 after:left-0 after:opacity-60 grid place-content-center ">
       <OutsideClickHandler
@@ -117,7 +133,10 @@ const AddProduct = ({ setIsProductModal }) => {
                 </span>
               </div>
             </div>
-            <button className="btn-primary !bg-success right-8 bottom-6 absolute">
+            <button
+              className="btn-primary !bg-success right-8 bottom-6 absolute"
+              onClick={handleCreate}
+            >
               Create
             </button>
 
