@@ -1,20 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import Title from "../ui/Title";
 import { GiCancel } from "react-icons/gi";
 import axios from "axios";
 import { useFormik } from "formik";
 import { productSchema } from "../../schema/product";
+import { toast } from "react-toastify";
 
 const AddProduct = ({ setIsProductModal }) => {
   const [file, setFile] = useState();
   const [imageSrc, setImageSrc] = useState();
+  const [imageUrl, setImageUrl] = useState();
 
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
   const [category, setCategory] = useState("");
   const [prices, setPrices] = useState([]);
   const [extra, setExtra] = useState("");
   const [extraOptions, setExtraOptions] = useState([]);
-  console.log(extraOptions);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/categories`
+        );
+        setCategories(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProducts();
+  }, []);
 
   const onSubmit = async (values, actions) => {
     await new Promise((resolve) => setTimeout(resolve, 4000));
@@ -23,14 +41,14 @@ const AddProduct = ({ setIsProductModal }) => {
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
       initialValues: {
-        image: "",
-        title: "",
-        desc: "",
-        category: "",
-        smallPrice: "",
-        mediumPrice: "",
-        largePrice: "",
-        extras: [],
+        image: imageUrl,
+        title: title,
+        desc: desc,
+        category: category,
+        smallPrice: prices[0],
+        mediumPrice: prices[1],
+        largePrice: prices[2],
+        extras: extraOptions,
       },
       onSubmit,
       validationSchema: productSchema,
@@ -54,6 +72,28 @@ const AddProduct = ({ setIsProductModal }) => {
         "https://api.cloudinary.com/v1_1/dp5whpvw0/image/upload",
         formData
       );
+      const { url } = uploadRes.data;
+      setImageUrl(url);
+      const newProuct = {
+        img: url,
+        title,
+        desc,
+        prices,
+        category: category.toLowerCase(),
+        extraOptions,
+      };
+
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/products`,
+        newProuct
+      );
+      if (res.status === 201) {
+        setIsProductModal(false);
+        toast.success("Product Created Successfully", {
+          position: "top-right",
+          closeOnClick: true,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -66,6 +106,11 @@ const AddProduct = ({ setIsProductModal }) => {
         setExtra({ text: "", price: "" });
       }
     }
+  };
+  const changePrice = (e, index) => {
+    const currentPrices = prices;
+    currentPrices[index] = e.target.value;
+    setPrices(currentPrices);
   };
 
   return (
@@ -95,7 +140,6 @@ const AddProduct = ({ setIsProductModal }) => {
                     handleChange(e);
                   }}
                   name="image"
-                  value={values.image}
                 />
                 <button className="btn-primary !rounded-none !bg-blue-600 pointer-events-none">
                   Choose an Image
@@ -133,9 +177,9 @@ const AddProduct = ({ setIsProductModal }) => {
                 placeholder="Write a Title"
                 name="title"
                 onChange={(e) => {
+                  setTitle(e.target.value);
                   handleChange(e);
                 }}
-                value={values.title}
               />
               {errors.title && touched.title && (
                 <span className="text-xs mt-1 text-danger">{errors.title}</span>
@@ -150,9 +194,11 @@ const AddProduct = ({ setIsProductModal }) => {
                     : "border-gray-400"
                 }`}
                 placeholder="Write a Description"
-                onChange={handleChange}
+                onChange={(e) => {
+                  setDesc(e.target.value);
+                  handleChange(e);
+                }}
                 name="desc"
-                value={values.desc}
               />
               {errors.desc && touched.desc && (
                 <span className="text-xs mt-1 text-danger">{errors.desc}</span>
@@ -160,54 +206,82 @@ const AddProduct = ({ setIsProductModal }) => {
             </div>
             <div className="flex flex-col text-sm mt-4">
               <span className="font-semibold mb-1">Select Category</span>
-              <select className="border border-gray-400  p-2 text-sm outline-none rounded-md">
-                <option value="1">Category 1</option>
-                <option value="2">Category 2</option>
-                <option value="3">Category 3</option>
+              <select
+                className="border border-gray-400  p-2 text-sm outline-none rounded-md"
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">Select a Category</option>
+                {categories.length > 0 &&
+                  categories.map((category) => (
+                    <option
+                      key={category._id}
+                      value={category.title.toLowerCase()}
+                    >
+                      {category.title}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className="flex flex-col text-sm mt-4">
               <span className="font-semibold mb-1">Prices</span>
-              <div className="flex justify-between gap-4 md:flex-row flex-col items-center">
+              {category === "pizza" ? (
+                <div className="flex justify-between gap-4 md:flex-row flex-col items-center">
+                  <input
+                    type="number"
+                    className={`border border-gray-400 p-1 text-sm outline-none md:w-28
+                ${errors.smallPrice && touched.smallPrice && "border-red-500"}`}
+                    placeholder="small"
+                    name="smallPrice"
+                    onChange={(e) => {
+                      changePrice(e, 0);
+                      handleChange(e);
+                    }}
+                    onBlur={handleBlur}
+                  />
+                  <input
+                    type="number"
+                    className={`border border-gray-400 p-1 text-sm outline-none md:w-28
+                ${
+                  errors.mediumPrice && touched.mediumPrice && "border-red-500"
+                }`}
+                    placeholder="medium"
+                    name="mediumPrice"
+                    onChange={(e) => {
+                      changePrice(e, 1);
+                      handleChange(e);
+                    }}
+                    value={values.mediumPrice}
+                    onBlur={handleBlur}
+                  />
+                  <input
+                    type="number"
+                    className={`border border-gray-400 p-1 text-sm outline-none md:w-28
+                ${errors.largePrice && touched.largePrice && "border-red-500"}`}
+                    placeholder="large"
+                    name="largePrice"
+                    onChange={(e) => {
+                      changePrice(e, 2);
+                      handleChange(e);
+                    }}
+                    value={values.largePrice}
+                    onBlur={handleBlur}
+                  />
+                </div>
+              ) : (
                 <input
                   type="number"
                   className={`border border-gray-400 p-1 text-sm outline-none md:w-28
-                  ${
-                    errors.smallPrice && touched.smallPrice && "border-red-500"
-                  }`}
-                  placeholder="small"
+            ${errors.smallPrice && touched.smallPrice && "border-red-500"}`}
+                  placeholder="Price"
                   name="smallPrice"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    changePrice(e, 0);
+                    handleChange(e);
+                  }}
                   value={values.smallPrice}
                   onBlur={handleBlur}
                 />
-                <input
-                  type="number"
-                  className={`border border-gray-400 p-1 text-sm outline-none md:w-28
-                  ${
-                    errors.mediumPrice &&
-                    touched.mediumPrice &&
-                    "border-red-500"
-                  }`}
-                  placeholder="medium"
-                  name="mediumPrice"
-                  onChange={handleChange}
-                  value={values.mediumPrice}
-                  onBlur={handleBlur}
-                />
-                <input
-                  type="number"
-                  className={`border border-gray-400 p-1 text-sm outline-none md:w-28
-                  ${
-                    errors.largePrice && touched.largePrice && "border-red-500"
-                  }`}
-                  placeholder="large"
-                  name="largePrice"
-                  onChange={handleChange}
-                  value={values.largePrice}
-                  onBlur={handleBlur}
-                />
-              </div>
+              )}
             </div>
             <div className="flex flex-col text-sm mt-4 mb-16">
               <span className="font-semibold mb-1">Extras</span>
@@ -220,7 +294,6 @@ const AddProduct = ({ setIsProductModal }) => {
                   onChange={(e) => {
                     setExtra({ ...extra, [e.target.name]: e.target.value });
                   }}
-                  value={extra.text}
                 />
                 <input
                   type="number"
@@ -230,7 +303,6 @@ const AddProduct = ({ setIsProductModal }) => {
                   onChange={(e) => {
                     setExtra({ ...extra, [e.target.name]: e.target.value });
                   }}
-                  value={extra.price}
                 />
                 <button
                   className="btn-primary right-8 absolute"
@@ -239,13 +311,16 @@ const AddProduct = ({ setIsProductModal }) => {
                   Add
                 </button>
               </div>
-              <div className="mt-2">
+              <div className="mt-2 ">
                 {extraOptions.map((option, index) => (
                   <span
-                    className="inline-block border border-orange-600 text-orange-600 p-2 rounded-xl text-xs mr-2 my-2"
+                    className="inline-block border border-orange-600 text-orange-700 p-2 rounded-xl text-xs mr-2 my-2"
                     key={index}
                   >
-                    {option.text} - {option.price}
+                    {option.text}{" "}
+                    <span className="ml-3 text-emerald-600 ">
+                      {option.price}$
+                    </span>
                     <button
                       className="ml-2 rounded-full bg-red-700 text-white px-1 m-0"
                       onClick={() => {
@@ -263,6 +338,7 @@ const AddProduct = ({ setIsProductModal }) => {
             <button
               className="btn-primary !bg-success right-8 bottom-6 absolute"
               onClick={handleCreate}
+              type="submit"
             >
               Create
             </button>
