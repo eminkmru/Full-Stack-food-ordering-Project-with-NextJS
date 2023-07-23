@@ -1,21 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import Title from "../ui/Title";
-import Image from "next/image";
 import { GiCancel } from "react-icons/gi";
-import Input from "../form/Input";
 
 const AddProduct = ({ setIsProductModal }) => {
+  const [file, setFile] = useState();
+  const [imageSrc, setImageSrc] = useState();
+
+  const handleOnchange = (changeEvent) => {
+    const reader = new FileReader();
+    reader.onload = function (loadEvent) {
+      setImageSrc(loadEvent.target.result);
+      setFile(changeEvent.target.files[0]);
+    };
+    reader.readAsDataURL(changeEvent.target.files[0]);
+    console.log(imageSrc);
+  };
   return (
     <div className="fixed top-0 left-0 w-screen h-screen z-50 after:content-[''] after:w-screen after:h-screen after:bg-white after:absolute after:top-0 after:left-0 after:opacity-60 grid place-content-center ">
-      <OutsideClickHandler onOutsideClick={() => setIsProductModal(false)}>
+      <OutsideClickHandler
+        onOutsideClick={() => {
+          if (confirm("Are you sure you want to exit?")) {
+            setIsProductModal(false);
+          }
+        }}
+      >
         <div className="w-full h-full grid place-content-center relative">
           <div className="relative z-50 md:w-[600px] w-[370px]  bg-white border-2 p-10 rounded-3xl">
             <Title addClass="text-[40px] text-center">Add a New Product</Title>
 
-            <div className="flex flex-col text-sm mt-8 ">
-              <span className="font-semibold mb-2">Choose an Image</span>
-              <input type="file" />
+            <div className="flex flex-row text-sm mt-8 gap-5 h-20">
+              <label className="flex gap-2 items-center">
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => handleOnchange(e)}
+                />
+                <button className="btn-primary !rounded-none !bg-blue-600 pointer-events-none">
+                  Choose an Image
+                </button>
+                {imageSrc && (
+                  <div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      className="rounded-full border-2 border-primary"
+                      src={imageSrc}
+                      alt=""
+                      width={90}
+                      height={90}
+                    />
+                  </div>
+                )}
+              </label>
             </div>
             <div className="flex flex-col text-sm mt-4">
               <span className="font-semibold mb-1">Title</span>
@@ -87,7 +123,11 @@ const AddProduct = ({ setIsProductModal }) => {
 
             <button
               className="absolute  top-4 right-4"
-              onClick={() => setIsProductModal(false)}
+              onClick={() => {
+                if (confirm("Are you sure you want to exit?")) {
+                  setIsProductModal(false);
+                }
+              }}
             >
               <GiCancel size={25} className=" transition-all" />
             </button>
