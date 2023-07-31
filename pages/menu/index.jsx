@@ -18,8 +18,10 @@ export const getServerSideProps = async () => {
     `${process.env.NEXT_PUBLIC_API_URL}/products`
   );
   return {
-    props: { categoryList: category.data ? category.data : [] },
-    props: { productList: product.data ? product.data : [] },
+    props: {
+      categoryList: category.data ? category.data : [],
+      productList: product.data ? product.data : [],
+    },
   };
 };
 
