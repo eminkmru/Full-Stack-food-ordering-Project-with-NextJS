@@ -34,12 +34,12 @@ const Cart = () => {
                   key={product.id}
                 >
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
-                    <Image src="/images/f1.png" alt="" width={50} height={50} />
+                    <Image src={product.img} alt="" width={50} height={50} />
                     <span>{product.name}</span>
                   </td>
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                     {product.extras.map((item) => (
-                      <span key={item.id}>{item.name}, </span>
+                      <span key={item.id}>{item.text}, </span>
                     ))}
                   </td>
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">

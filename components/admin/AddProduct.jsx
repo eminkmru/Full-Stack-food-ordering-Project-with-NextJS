@@ -6,8 +6,10 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { productSchema } from "../../schema/product";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 const AddProduct = ({ setIsProductModal }) => {
+  const [btnDisabled, setBtnDisabled] = useState(false);
   const [file, setFile] = useState();
   const [imageSrc, setImageSrc] = useState();
   const [imageUrl, setImageUrl] = useState();
@@ -20,17 +22,17 @@ const AddProduct = ({ setIsProductModal }) => {
   const [extraOptions, setExtraOptions] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const getProducts = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/categories`
+      );
+      setCategories(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/categories`
-        );
-        setCategories(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getProducts();
   }, []);
 
@@ -63,6 +65,7 @@ const AddProduct = ({ setIsProductModal }) => {
   };
 
   const handleCreate = async () => {
+    setBtnDisabled(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "food-ordering");
@@ -93,10 +96,12 @@ const AddProduct = ({ setIsProductModal }) => {
           position: "top-right",
           closeOnClick: true,
         });
+        getProducts();
       }
     } catch (error) {
       console.log(error);
     }
+    setBtnDisabled(false);
   };
 
   const handleExtra = () => {
@@ -335,13 +340,23 @@ const AddProduct = ({ setIsProductModal }) => {
                 ))}
               </div>
             </div>
-            <button
-              className="btn-primary !bg-success right-8 bottom-6 absolute"
-              onClick={handleCreate}
-              type="submit"
-            >
-              Create
-            </button>
+            {btnDisabled ? (
+              <button
+                className="btn-primary !bg-green-400 right-8 bottom-6 absolute focus:outline-none cursor-not-allowed"
+                type="submit"
+                disabled
+              >
+                <CircularProgress size={25} />
+              </button>
+            ) : (
+              <button
+                className="btn-primary !bg-success right-8 bottom-6 absolute"
+                onClick={handleCreate}
+                type="submit"
+              >
+                Create
+              </button>
+            )}
 
             <button
               className="absolute  top-4 right-4"
