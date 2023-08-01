@@ -38,13 +38,27 @@ const Index = ({ food }) => {
   };
 
   const handleClick = () => {
-    dispatch(addProduct({ ...food[0], extras, price, quantity: 1 }));
+    dispatch(
+      addProduct({
+        ...food[0],
+        title: food.title,
+        extras,
+        price,
+        quantity: 1,
+      })
+    );
   };
 
   return (
     <div className="flex items-center md:h-[calc(100vh_-_88px)] gap-5 py-20 flex-wrap ">
       <div className="relative md:flex-1 md:w-[80%] md:h-[80%] w-36 h-36 mx-auto">
-        <Image src={food?.img} alt="" layout="fill" objectFit="contain" />
+        <Image
+          src={food?.img}
+          alt=""
+          layout="fill"
+          objectFit="contain"
+          priority
+        />
       </div>
       <div className="md:flex-1 md:text-start text-center">
         <Title addClass="text-6xl">{food.title}</Title>
@@ -112,6 +126,7 @@ const Index = ({ food }) => {
     </div>
   );
 };
+
 export const getServerSideProps = async ({ params }) => {
   const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/products/${params.id}`
