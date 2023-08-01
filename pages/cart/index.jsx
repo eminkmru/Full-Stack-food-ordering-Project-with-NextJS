@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Title from "../../components/ui/Title";
 import { useSelector, useDispatch } from "react-redux";
 import { reset } from "../../redux/cartSlice";
@@ -6,6 +5,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Cart = ({ userList }) => {
   const { data: session } = useSession();
@@ -13,13 +13,22 @@ const Cart = ({ userList }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = userList?.find((user) => user.email === session?.user?.email);
+  const [productState, setProductState] = useState([]);
 
   const newOrder = {
     customer: user?.fullName,
     address: user?.address ? user?.address : "No address",
     total: cart.total,
+    products: productState,
     method: 0,
   };
+
+  useEffect(() => {
+    setProductState(
+      ...productState,
+      cart.products.map((product) => product.title)
+    );
+  }, []);
 
   const createOrder = async () => {
     try {
@@ -76,7 +85,7 @@ const Cart = ({ userList }) => {
                     <span className="text-purple-600">{product.title}</span>
                   </td>
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                    {product.extras > 0
+                    {product.extras.length > 0
                       ? product.extras.map((item) => (
                           <span key={item.id}>{item.text}, </span>
                         ))

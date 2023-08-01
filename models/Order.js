@@ -18,9 +18,14 @@ const OrderSchema = new mongoose.Schema(
     },
     status: {
       type: Number,
+      default: 0,
     },
     method: {
       type: Number,
+      required: true,
+    },
+    products: {
+      type: [String],
       required: true,
     },
   },

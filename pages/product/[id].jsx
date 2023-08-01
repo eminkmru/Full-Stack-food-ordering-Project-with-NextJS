@@ -42,6 +42,7 @@ const Index = ({ food }) => {
       addProduct({
         ...food[0],
         title: food.title,
+        img: food.img,
         extras,
         price,
         quantity: 1,
