@@ -50,7 +50,7 @@ const Footer = () => {
               {footer?.socialMedia?.map((item, index) => (
                 <a
                   href={item.link}
-                  className="w-8 h-8 grid place-content-center bg-white text-secondary rounded-full "
+                  className="w-8 h-8 grid place-content-center bg-white text-secondary rounded-full hover:text-white hover:bg-primary transition-all transform hover:scale-110 "
                   key={index}
                   target="_blank"
                   rel="noreferrer"

@@ -16,14 +16,14 @@ const Header = () => {
 
   return (
     <div
-      className={`h-[5.5rem] z-50 fixed w-full ${
-        router.asPath === "/" ? "bg-transparent" : "bg-secondary"
+      className={`h-[5.5rem] z-50 relative w-full ${
+        router.asPath === "/" ? "bg-transparent fixed" : "bg-secondary"
       }`}
     >
       <div className="container mx-auto text-white flex justify-between items-center h-full">
         <Logo />
         <nav
-          className={`sm:static absolute top-0 left-0 sm:w-auto sm:h-auto w-full h-screen sm:text-white text-black sm:bg-transparent bg-white sm:flex hidden  ${
+          className={`sm:static absolute top-0 left-0 sm:w-auto sm:h-auto w-full h-screen sm:text-white text-black sm:bg-transparent bg-white sm:flex hidden z-50 ${
             isMenuModal === true && "!grid place-content-center"
           }`}
         >

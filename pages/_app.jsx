@@ -24,10 +24,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <SessionProvider session={session}>
       <Provider store={store}>
         <Layout>
-          <div className="pt-[88px]">
-            <ToastContainer />
-            <Component {...pageProps} />
-          </div>
+          <ToastContainer />
+          <Component {...pageProps} />
         </Layout>
       </Provider>
     </SessionProvider>

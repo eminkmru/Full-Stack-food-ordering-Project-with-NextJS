@@ -31,8 +31,8 @@ const Profile = () => {
 
   return (
     <div className="flex px-10 min-h-[calc(100vh_-_433px)] lg:flex-row flex-col lg:mb-0 mb-10">
-      <div className="lg:w-80 w-100 flex-shrink-0">
-        <div className="relative flex flex-col items-center px-10 py-5 border border-b-0">
+      <div className="lg:w-80 w-100 flex-shrink-0 lg:h-[80vh]   justify-center flex flex-col border-l-2 border-r-4 shadow-2xl">
+        <div className="relative flex flex-col items-center px-10 py-5  border-b-0">
           <Image
             src="/images/admin.png"
             alt=""
