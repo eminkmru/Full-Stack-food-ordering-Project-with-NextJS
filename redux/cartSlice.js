@@ -18,8 +18,35 @@ const cartSlice = createSlice({
       state.quantity = 0;
       state.total = 0;
     },
+    quantityIncrease: (state, action) => {
+      state.products.map((item) => {
+        if (item.title === action.payload.title) {
+          state.quantity += 1;
+          item.foodQuantity += 1;
+          state.total += action.payload.price;
+        }
+      });
+    },
+    quantityDecrease: (state, action) => {
+      state.products.map((item) => {
+        if (item.title === action.payload.title) {
+          if (item.foodQuantity > 1) {
+            state.quantity -= 1;
+            item.foodQuantity -= 1;
+            state.total -= action.payload.price;
+          } else {
+            state.products = state.products.filter(
+              (item) => item.title !== action.payload.title
+            );
+            state.quantity -= 1;
+            state.total -= action.payload.price;
+          }
+        }
+      });
+    },
   },
 });
 
-export const { addProduct, reset } = cartSlice.actions;
+export const { addProduct, reset, quantityDecrease, quantityIncrease } =
+  cartSlice.actions;
 export default cartSlice.reducer;

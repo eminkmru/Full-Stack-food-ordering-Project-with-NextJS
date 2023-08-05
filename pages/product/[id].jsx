@@ -13,6 +13,8 @@ const Index = ({ food }) => {
   const [extras, setExtras] = useState([]);
   const cart = useSelector((state) => state.cart);
 
+  const findCart = cart.products.find((item) => item._id === food._id);
+
   const dispatch = useDispatch();
 
   const handleSize = (sizeIndex) => {
@@ -40,7 +42,8 @@ const Index = ({ food }) => {
   const handleClick = () => {
     dispatch(
       addProduct({
-        ...food[0],
+        ...food,
+        foodQuantity: 1,
         title: food.title,
         img: food.img,
         extras,
@@ -49,6 +52,7 @@ const Index = ({ food }) => {
       })
     );
   };
+  console.log(food);
 
   return (
     <div className="flex items-center md:h-[calc(100vh_-_88px)] gap-5 py-20 flex-wrap ">
@@ -120,7 +124,11 @@ const Index = ({ food }) => {
             </label>
           ))}
         </div>
-        <button className="btn-primary" onClick={handleClick}>
+        <button
+          className="btn-primary"
+          onClick={handleClick}
+          disabled={findCart}
+        >
           Add to Cart
         </button>
       </div>

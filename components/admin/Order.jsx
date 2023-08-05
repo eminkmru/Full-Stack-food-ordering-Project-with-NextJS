@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 const Order = () => {
   const [orders, setOrders] = useState([]);
   const status = ["preparing", "delivering", "delivered"];
+  const [hasExtra, setHasExtra] = useState(false);
+
   useEffect(() => {
     const getOrders = async () => {
       try {
@@ -112,11 +114,23 @@ const Order = () => {
                     <td className="py-4 px-6 font-medium  hover:text-white flex-wrap w-[100px] whitespace-nowrap">
                       {order?.products.map((product, index) => (
                         <span key={index}>
-                          {product} <br />
+                          {product.title} * {product.foodQuantity} <br />
                         </span>
                       ))}
                     </td>
-
+                    <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                      {order?.products.map((item) => {
+                        return (
+                          <div key={item._id}>
+                            {item.extras &&
+                              item.extras.length > 0 &&
+                              item.extras.map((extra) => (
+                                <span key={extra._id}>{extra.text}, </span>
+                              ))}
+                          </div>
+                        );
+                      })}
+                    </td>
                     <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                       ${order?.total}
                     </td>
