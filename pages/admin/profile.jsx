@@ -8,7 +8,6 @@ import Footer from "../../components/admin/Footer";
 import Order from "../../components/admin/Order";
 import Products from "../../components/admin/Products";
 import { toast } from "react-toastify";
-import AddProduct from "../../components/admin/AddProduct";
 
 const Profile = () => {
   const [tabs, setTabs] = useState(0);
@@ -31,7 +30,7 @@ const Profile = () => {
 
   return (
     <div className="flex px-10 min-h-[calc(100vh_-_433px)] lg:flex-row flex-col lg:mb-0 mb-10">
-      <div className="lg:w-80 w-100 flex-shrink-0 lg:h-[80vh]   justify-center flex flex-col border-l-2 border-r-4 shadow-2xl">
+      <div className="lg:w-80 w-100 flex-shrink-0 lg:h-[100vh]   justify-center flex flex-col border-l-2 border-r-4 shadow-2xl">
         <div className="relative flex flex-col items-center px-10 py-5  border-b-0">
           <Image
             src="/images/admin.png"
@@ -78,6 +77,24 @@ const Profile = () => {
           >
             <i className="fa fa-window-maximize"></i>
             <button className="ml-1">Footer</button>
+          </li>
+          <li
+            className={`border w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all`}
+            onClick={() => window.open("/", "_blank")}
+          >
+            <i className="fa-solid fa-house"></i>
+            <button className="ml-1">
+              Go to the site <br /> (New Tab)
+            </button>
+          </li>
+          <li
+            className={`border w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all`}
+            onClick={() => push("/")}
+          >
+            <i className="fa-solid fa-house"></i>
+            <button className="ml-1">
+              Go to the site <br /> (current tab)
+            </button>
           </li>
           <li
             className={`border w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all ${

@@ -80,7 +80,8 @@ const Order = () => {
                   {currentUser?.address}
                 </td>
                 <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                  {order.createdAt.substring(0, 10)}
+                  {order.createdAt.substring(0, 10)}{" "}
+                  {order.createdAt.substring(11, 16)}
                 </td>
                 <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                   ${order.total}

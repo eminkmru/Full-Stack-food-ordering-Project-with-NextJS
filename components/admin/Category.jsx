@@ -59,7 +59,7 @@ const Category = () => {
   };
 
   return (
-    <div className="lg:p-8 flex-1 lg:mt-0 mt-5 ">
+    <div className="lg:p-8 flex-1 lg:mt-0 mt-5">
       <Title addClass="text-[40px]">Category</Title>
       <div className="mt-5">
         <div className="flex gap-4 flex-1 items-center">
@@ -72,15 +72,15 @@ const Category = () => {
             Add
           </button>
         </div>
-        <div className="mt-10  max-h-[40rem] overflow-auto p-4">
+        <div className="mt-10  max-h-[40rem] overflow-auto p-4 flex flex-col justify-center ">
           {categories.map((category) => (
             <div
               className="flex justify-between mt-4 border p-3 items-center border-r-4 border-b-8 border-primary rounded-lg hover:border-secondary transition-all"
               key={category._id}
             >
-              <b className="text-xl">{category.title}</b>
+              <b className="sm:text-xl text-md">{category.title}</b>
               <button
-                className="btn-primary !bg-danger"
+                className="btn-primary !bg-danger text-sm sm:text-base"
                 onClick={(e) => handleDelete(e, category._id)}
               >
                 Delete

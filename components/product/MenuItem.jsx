@@ -9,7 +9,6 @@ const MenuItem = ({ product }) => {
   const dispatch = useDispatch();
 
   const findCart = cart.products.find((item) => item._id === product._id);
-  console.log(product);
 
   const addToCart = () => {
     dispatch(

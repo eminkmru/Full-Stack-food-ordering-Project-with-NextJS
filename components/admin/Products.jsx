@@ -40,10 +40,10 @@ const Products = () => {
     }
   };
   return (
-    <div className="lg:p-8 flex-1 lg:mt-0 mt-5 relative min-h-[400px]  lg:max-w-[70%] xl:max-w-none">
+    <div className="lg:p-8 flex-1 lg:mt-0 relative min-h-[400px]  lg:max-w-[70%] xl:max-w-none flex flex-col justify-center">
       <Title addClass="text-[40px]">Products</Title>
       <div className="overflow-x-auto w-full mt-5 max-h-[500px] overflow-auto">
-        <table className="w-full text-sm text-center text-gray-500 min-w-[1000px]">
+        <table className="w-full text-sm text-center text-gray-500 xl:min-w-[1000px]">
           <thead className="text-xs text-gray-400 uppercase bg-gray-700">
             <tr>
               <th scope="col" className="py-3 px-6">
@@ -52,7 +52,7 @@ const Products = () => {
               <th scope="col" className="py-3 px-6">
                 ID
               </th>
-              <th scope="col" className="py-3 px-6">
+              <th scope="col" className="py-3">
                 TITLE
               </th>
               <th scope="col" className="py-3 px-6">
@@ -76,7 +76,7 @@ const Products = () => {
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                     {product._id.substring(0, 5)}...
                   </td>
-                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                  <td className="py-4 font-medium whitespace-nowrap hover:text-white">
                     {product.title}
                   </td>
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">

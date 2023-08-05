@@ -135,7 +135,10 @@ const Footer = () => {
   };
 
   return (
-    <form className="lg:p-8 flex-1 lg:mt-0 mt-5" onSubmit={handleSubmit}>
+    <form
+      className="lg:p-8 flex-1 lg:mt-0 mt-5 flex flex-col justify-center"
+      onSubmit={handleSubmit}
+    >
       <Title addClass="text-[40px]">Footer Settings</Title>
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 mt-4">
         {inputs.map((input) => (
