@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <SessionProvider session={session}>
       <Provider store={store}>
         {router.pathname.startsWith("/admin") ? (
-          <div className="bg-[#ececec]">
+          <div className="bg-[#ececec] h-screen">
             <ToastContainer />
             <Component {...pageProps} />
           </div>
