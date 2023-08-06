@@ -57,7 +57,7 @@ const Login = () => {
   ];
 
   return (
-    <div className="container mx-auto py-3">
+    <div className="container mx-auto py-3 flex h-screen items-center">
       <form
         className="flex flex-col items-center my-20 md:w-1/2 w-full mx-auto"
         onSubmit={handleSubmit}
